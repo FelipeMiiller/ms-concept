@@ -1,6 +1,5 @@
 import express from 'express';
-import * as dotenv from 'dotenv';
-dotenv.config();
+import './config/env'
 
 
 //import errorMiddleware from './middleware/errorMiddleware';
@@ -8,24 +7,37 @@ dotenv.config();
 import Controller from './interfaces/controller.interface';
 import errorMiddleware from './middleware/errorMiddleware';
 import { clientConsumer } from './client/user.consumer';
+import { env } from './config/env';
+
+
+
 
 class Server {
   private app: express.Application;
 
   constructor(controllers: Controller[]) {
     this.app = express();
-
+    
+    this.initializeSetup()
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
     this.initializeErrorHandling();
+    this.initializeServices();
 
-    // initialize services
-    clientConsumer 
   }
 
-  private initializeMiddlewares() {
+
+  private initializeSetup() {
+    
     //this.app.use(cors());
     this.app.use(express.json());
+
+
+  }
+  private initializeMiddlewares() {
+   
+
+
   }
 
   private initializeErrorHandling() {
@@ -38,14 +50,18 @@ class Server {
     });
   }
 
+  private initializeServices() {
+    clientConsumer
+
+  }
 
   public getApp() {
     return this.app;
   }
 
   public start() {
-    this.app.listen(process.env.PORT || 3000, () => {
-      console.log(`Server is running in port: ${process.env.PORT || 3000}`);
+    this.app.listen(env.port || 3000, () => {
+      console.log(`Server is running in port: ${env.port|| 3000}`);
     });
   }
 }

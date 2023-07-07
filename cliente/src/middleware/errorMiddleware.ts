@@ -1,19 +1,22 @@
 
 import { NextFunction, Request, Response } from 'express';
-import HttpException from 'src/exceptions/HttpException';
+import HttpException from 'src/exceptions/HttpExceptions';
+
 
 function errorMiddleware(
   error: HttpException,
-  request: Request,
+  _request: Request,
   response: Response,
   next: NextFunction,
 ) {
-  const status = error.status || 500;
-  const message = error.message || 'Something went wrong';
-  response.status(status).json({
-    status,
-    message,
-  });
+  const sendError = {
+    status: error.status || 500,
+    name: error.name || 'Something went wrong',
+    message: error.message || 'Something went wrong'
+
+  }
+
+  response.status(sendError.status).send(sendError.name);
 }
 
 export default errorMiddleware;

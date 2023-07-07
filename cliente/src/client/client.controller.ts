@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
-import { ClientService, IClientService } from "./client.service";
-import validate from "src/validation";
-import { createClientSchema } from "src/validation/client/createClientSchema";
+import { ClientService} from "./client.service";
 
-
+import { createClientSchema } from "./dto/createClientSchema";
+import validate from "src/middleware/validate";
+import HttpException from "src/exceptions/HttpExceptions";
 
 
 
@@ -12,26 +12,28 @@ export class ClientController {
     public router = express.Router();
 
 
-    constructor(private readonly clientService: IClientService = new ClientService()) {
+    constructor() {
+
         this.initializeRoutes();
     }
 
     public initializeRoutes() {
 
-        this.router.post(this.path, validate(createClientSchema), this.createClient)
+        this.router.post(this.path, validate(createClientSchema), this.create)
     }
 
-    async createClient(req: Request, res: Response) {
+    async create(req: Request, res: Response) {
 
 
         try {
-            const client = await this.clientService.create(req.body);
+            const client = await new ClientService().create(req.body);
             res.status(201).send(client);
         } catch (error) {
-            if (error instanceof Error) {
-                res.status(400).json(error.message);
+
+            if (error instanceof HttpException) {
+                res.status(500).send({ status: error.status, name: error.name, message: error.message });
             } else {
-                res.status(500).json("Unexpected error");
+                res.status(500).send("Unexpected error");
             }
         }
     }
