@@ -1,4 +1,4 @@
-import { IStreamClient, streamClient } from "src/infra/provider/streamClient";
+import { IStreamClient, streamClient } from "src/common/infra/provider/streamClient";
 
 
 
@@ -15,7 +15,7 @@ class ClientConsumer {
     }
 
 
-    initialize() {
+      initialize() {
         this.createClient()
     }
 

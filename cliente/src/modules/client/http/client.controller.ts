@@ -1,9 +1,9 @@
 import express, { Request, Response } from "express";
-import { ClientService} from "./client.service";
+import { ClientService} from "../domain/client.service";
 
-import { createClientSchema } from "./dto/createClientSchema";
+import { createClientSchema } from "../domain/dto/createClientSchema";
 import validate from "src/middleware/validate";
-import HttpException from "src/exceptions/HttpExceptions";
+import HttpException from "src/util/exceptions/HttpExceptions";
 
 
 

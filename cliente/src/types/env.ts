@@ -11,3 +11,6 @@ export interface IEnvConfig {
       password: string;
     };
   }
+
+
+

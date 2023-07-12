@@ -1,6 +1,6 @@
 
-import { IStreamClient, streamClient } from "src/infra/provider/streamClient"
-import { IClient, IClientRepository, clientRepository as ClientRepository } from "./client.repository"
+import { IStreamClient, streamClient } from "src/common/infra/provider/streamClient"
+import { IClient, IClientRepository, clientRepository as ClientRepository } from "./repository/client.repository"
 
 
 export class ClientService {

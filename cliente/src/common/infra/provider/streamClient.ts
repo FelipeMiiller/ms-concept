@@ -1,8 +1,9 @@
 
 
 import { Consumer, Kafka, KafkaConfig } from "kafkajs"
-import { env } from "src/config/env"
-import { StreamException } from "src/exceptions/HttpExceptions"
+import { env } from "../../../util/config/env"
+import { StreamException } from "../../../util/exceptions/HttpExceptions"
+
 
 
 

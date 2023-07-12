@@ -1,11 +1,17 @@
 
 import dotenv from 'dotenv'
-import { IEnvConfig } from 'src/types/env';
+import { IEnvConfig } from '../../types/env';
 
 
 
+type TDefault = {
+  env: "dev" | "prod" | "test";
+}
 
-function configEnvironment<T>(): T {
+
+export function ConfigEnv<T>(): (T & TDefault) {
+
+
   const result = dotenv.config();
 
   if (result.error) {
@@ -30,13 +36,18 @@ function configEnvironment<T>(): T {
     }
 
     currentObj[keys[keys.length - 1].toLowerCase()] = value;
+
   }
+  const node = obj.node as unknown as TDefault;
 
 
-  return obj as T;
+  const t = { ...(obj[node.env] as Record<string, string>), ...node };
+
+
+  return t as T & TDefault
 }
 
 
 
-export const env = configEnvironment<IEnvConfig>();
-console.log(env)
+export const env = ConfigEnv<IEnvConfig>();
+console.log("return", env)

@@ -1,41 +1,38 @@
 import express from 'express';
-import './config/env'
-
-
-//import errorMiddleware from './middleware/errorMiddleware';
-
-import Controller from './interfaces/controller.interface';
+import { env } from './util/config/env';
+import Controller from './common/interfaces/controller.interface';
 import errorMiddleware from './middleware/errorMiddleware';
-import { clientConsumer } from './client/user.consumer';
-import { env } from './config/env';
+import { clientConsumer } from './modules/client/http/user.consumer';
 
 
 
 
-class Server {
+
+
+export default class Server {
   private app: express.Application;
 
   constructor(controllers: Controller[]) {
     this.app = express();
-    
+
     this.initializeSetup()
     this.initializeMiddlewares();
     this.initializeControllers(controllers);
     this.initializeErrorHandling();
-    this.initializeServices();
+    this.initializeStreams();
 
   }
 
 
   private initializeSetup() {
-    
+
     //this.app.use(cors());
     this.app.use(express.json());
 
 
   }
   private initializeMiddlewares() {
-   
+
 
 
   }
@@ -50,7 +47,7 @@ class Server {
     });
   }
 
-  private initializeServices() {
+  private initializeStreams() {
     clientConsumer
 
   }
@@ -61,9 +58,7 @@ class Server {
 
   public start() {
     this.app.listen(env.port || 3000, () => {
-      console.log(`Server is running in port: ${env.port|| 3000}`);
+      console.log(`Server is running in port: ${env.port || 3000}`);
     });
   }
 }
-
-export default Server;

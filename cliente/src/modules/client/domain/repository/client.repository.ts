@@ -1,8 +1,12 @@
 
 import { PrismaClient } from '@prisma/client';
+import { prismaClient } from '../../../../common/infra/database/prismaClient';
+import { DBException } from '../../../../util/exceptions/HttpExceptions';
 
-import { DBException } from 'src/exceptions/HttpExceptions';
-import { prismaClient } from 'src/infra/database/prismaClient';
+
+
+
+
 
 
 
@@ -16,16 +20,18 @@ export type IClient = {
 
 
 export interface IClientRepository {
-    create(data: Omit<IClient, 'id'>): Promise<IClient>;
+    create(data: Omit<IClient,'id'>): Promise<IClient>;
     findById(id: string): Promise<IClient>;
     findByEmail(email: string): Promise<IClient>;
     update(id: string, data: Partial<IClient>): Promise<IClient>;
     delete(id: string): Promise<void>;
 }
 
-class ClientRepository implements IClientRepository {
+export class ClientRepository implements IClientRepository {
 
-    constructor(private readonly prisma: PrismaClient = prismaClient) { }
+    constructor(private prisma: PrismaClient = prismaClient) {
+
+    }
 
     async create(data: Omit<IClient, 'id'>): Promise<IClient> {
         try {
@@ -105,6 +111,23 @@ class ClientRepository implements IClientRepository {
                 throw new DBException(`Failed to delete client: ${error.message}`, 400);
             }
             throw new DBException('Failed to delete client,unknown error !!!', 400);
+        }
+    }
+
+
+    async deleteAll(): Promise<void> {
+        try {
+            const client = await this.prisma.client.deleteMany({})
+
+
+            if (!client) {
+                throw new Error(`Deleted all clients`);
+            }
+        } catch (error) {
+            if (error instanceof Error) {
+                throw new DBException(`Failed to delete all clients: ${error.message}`, 400);
+            }
+            throw new DBException('Failed to delete all clients,unknown error !!!', 400);
         }
     }
 }
